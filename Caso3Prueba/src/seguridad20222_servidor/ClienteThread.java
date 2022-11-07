@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 
+import javax.crypto.SecretKey;
+
 public class ClienteThread extends Thread {
 
     private Socket sc = null;
@@ -69,11 +71,8 @@ public class ClienteThread extends Thread {
     		Long longy = Long.valueOf(y);
     		BigInteger biy = BigInteger.valueOf(longy);
 
-            Integer Pint = Integer.parseInt(P.toString());
-            Integer Gint = Integer.parseInt(G.toString());
-
-            BigInteger bigP = BigInteger.valueOf(Pint);
-            BigInteger bigG = BigInteger.valueOf(Gint);
+            BigInteger bigP = new BigInteger(P);
+            BigInteger bigG = new BigInteger(G);
 
             BigInteger Gy = G2Y(bigG, biy, bigP);
 
@@ -81,8 +80,13 @@ public class ClienteThread extends Thread {
 
             ac.println(Gy.toString());
 
-
             //Generar Key
+
+            BigInteger llave_maestra = calcular_llave_maestra(Gy,biy,new BigInteger(P));
+    		String str_llave = llave_maestra.toString();
+
+            SecretKey sk_srv = sf.csk1(str_llave);
+			SecretKey sk_mac = sf.csk2(str_llave);
 
             //Envio de mensaje y el hmac
 
@@ -127,6 +131,10 @@ public class ClienteThread extends Thread {
 
     private BigInteger G2Y(BigInteger base, BigInteger exponente, BigInteger modulo) {
 		return base.modPow(exponente,modulo);
+	}
+
+    private BigInteger calcular_llave_maestra(BigInteger base, BigInteger exponente, BigInteger modulo) {
+		return base.modPow(exponente, modulo);
 	}
     
 }
