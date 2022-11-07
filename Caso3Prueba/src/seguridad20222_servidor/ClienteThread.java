@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.net.Socket;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 
 public class ClienteThread extends Thread {
 
@@ -38,7 +40,7 @@ public class ClienteThread extends Thread {
 
             ac.println("SECURE INIT");
 
-            //Recibir
+            //Recibir    
 
             String G = dc.readLine();
             String P = dc.readLine();
@@ -57,9 +59,28 @@ public class ClienteThread extends Thread {
             } else {
                 ac.println("ERROR");
                 System.out.println(nombre + "se encontro un error la firma");
+                //Falta matar el cliente
             }
 
-            //Calcular Gy
+            //Calcular y enviar Gy
+
+            SecureRandom r = new SecureRandom();
+			int y = Math.abs(r.nextInt());
+    		Long longy = Long.valueOf(y);
+    		BigInteger biy = BigInteger.valueOf(longy);
+
+            Integer Pint = Integer.parseInt(P.toString());
+            Integer Gint = Integer.parseInt(G.toString());
+
+            BigInteger bigP = BigInteger.valueOf(Pint);
+            BigInteger bigG = BigInteger.valueOf(Gint);
+
+            BigInteger Gy = G2Y(bigG, biy, bigP);
+
+            System.out.println(nombre + "Se genero Gy: " + Gy);
+
+            ac.println(Gy.toString());
+
 
             //Generar Key
 
@@ -102,6 +123,10 @@ public class ClienteThread extends Thread {
 			ret += (g.length()==1?"0":"") + g;
 		}
 		return ret;
+	}
+
+    private BigInteger G2Y(BigInteger base, BigInteger exponente, BigInteger modulo) {
+		return base.modPow(exponente,modulo);
 	}
     
 }
