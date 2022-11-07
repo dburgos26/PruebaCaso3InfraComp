@@ -18,15 +18,12 @@ public class ClienteMain {
         }
         int cantidad = Integer.parseInt(cantidadStr);
 
-        //Generar el socket
-
-        Socket sc = new Socket("localhost", 4030);
-
         //Generar los clientes
 
         for(int i = 0; i < cantidad; i++){
 
-            ClienteThread t = new ClienteThread(sc);
+            Socket sc = new Socket("localhost", 4030);
+            ClienteThread t = new ClienteThread(sc, "" + i);
             t.start();
 
         }
