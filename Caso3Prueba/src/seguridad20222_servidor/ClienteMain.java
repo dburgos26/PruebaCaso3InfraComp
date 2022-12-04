@@ -20,7 +20,7 @@ public class ClienteMain {
 
         //Generar los clientes
 
-        // prueba
+        // prueba 2
 
         for(int i = 0; i < cantidad; i++){
 
