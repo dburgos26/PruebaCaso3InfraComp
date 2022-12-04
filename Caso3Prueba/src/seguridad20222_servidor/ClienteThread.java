@@ -34,6 +34,7 @@ public class ClienteThread extends Thread {
         try {
 
             //Generar lineas de comunicacion
+            //prueba
 
             ac = new PrintWriter(sc.getOutputStream() , true);
             dc = new BufferedReader(new InputStreamReader(sc.getInputStream()));
